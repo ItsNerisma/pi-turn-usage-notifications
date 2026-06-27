@@ -1,7 +1,7 @@
 {
   "name": "@nerisma/pi-turn-usage-notifications",
   "version": "1.0.0",
-  "description": "Notification par tour dans pi : tokens, coût et cache (HIT/MISS) affichés après chaque réponse de l'assistant.",
+  "description": "Per-turn token and cost notification in pi (output, cache hit/miss, total cost).",
   "keywords": [
     "pi-package",
     "pi-extension",
@@ -12,8 +12,13 @@
   "author": "Nerisma",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nerisma/pi-turn-usage-notifications.git"
+    "url": "git+https://github.com/ItsNerisma/pi-turn-usage-notifications.git"
   },
+  "files": [
+    "extensions",
+    "preview.png",
+    "README.md"
+  ],
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
