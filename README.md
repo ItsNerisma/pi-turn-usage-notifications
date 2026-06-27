@@ -17,6 +17,8 @@ metrics of the assistant's reply:
 
 Colors follow the active theme (`accent` / `muted` / `dim`).
 
+![pi-turn-usage-notifications preview](./preview.png)
+
 ## Installation
 
 ```bash
