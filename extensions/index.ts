@@ -1,17 +1,17 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 /**
- * usage_ticker — Affiche une notification après chaque tour avec :
- *   Tn · prix · OUT · HIT · MISS
+ * usage_ticker — Shows a notification after every turn with:
+ *   Tn · price · OUT · HIT · MISS
  *
- * Format :
+ * Format:
  *   > T1 · 0.186$ · OUT 7.79K · HIT 1.41M · MISS 79.60K
  */
 
 /**
- * Formate un nombre de tokens en notation lisible :
+ * Formats a token count into a readable notation:
  *   <1000 → "850"
- *   <1M   → "7.79K" (2 décimales si <100K, 0 sinon)
+ *   <1M   → "7.79K" (2 decimals below 100K, 0 above)
  *   >=1M  → "1.41M"
  */
 function formatTokens(n: number): string {
@@ -21,7 +21,7 @@ function formatTokens(n: number): string {
   return String(Math.round(n));
 }
 
-/** Forme de l'usage lue sur le message assistant (non typée dans pi). */
+/** Shape of the usage read from the assistant message (not typed in pi). */
 interface UsageInfo {
   cost?: { total?: number };
   output?: number;
@@ -31,13 +31,13 @@ interface UsageInfo {
 
 export default function (pi: ExtensionAPI) {
   pi.on("turn_end", async (event, ctx) => {
-    // Récupérer l'usage depuis le message assistant.
-    // `usage` n'est pas déclaré sur le type union du message dans les types
-    // publiés de pi ; il est bien présent au runtime sur le message assistant.
+    // Read the usage from the assistant message.
+    // `usage` is not declared on the message union type in pi's published
+    // types, but it is present at runtime on the assistant message.
     const usage = (event.message as { usage?: UsageInfo } | undefined)?.usage;
     if (!usage) return;
 
-    // Récupérer les ANSI du thème courant
+    // Pull the current theme's ANSI codes.
     const thm = ctx.ui.theme;
     const accentAnsi = thm.getFgAnsi("accent");
     const mutedAnsi = thm.getFgAnsi("muted");
@@ -46,7 +46,7 @@ export default function (pi: ExtensionAPI) {
 
     const turnNum = event.turnIndex + 1;
 
-    // Prix
+    // Price
     const price = usage.cost?.total ?? 0;
 
     // Tokens
@@ -54,10 +54,10 @@ export default function (pi: ExtensionAPI) {
     const hit = usage.cacheRead ?? 0;
     const miss = usage.input ?? 0;
 
-    // Construction des segments colorés
+    // Build the colored segments.
     const segments: string[] = [];
 
-    // Tous les segments en muted
+    // Every segment is rendered muted.
     const muted = (s: string) => `${mutedAnsi}${s}${reset}`;
 
     segments.push(muted(`T${turnNum}`));
@@ -72,7 +72,7 @@ export default function (pi: ExtensionAPI) {
 
     if (segments.length === 0) return;
 
-    // Assemblage : > accent + métriques muted
+    // Assemble: > accent + muted metrics.
     const body = segments.join(` ${dimAnsi}·${reset} `);
     const line = `${accentAnsi}>${reset} ${body}`;
 

@@ -1,21 +1,21 @@
 # @nerisma/pi-turn-usage-notifications
 
-Affiche une **notification après chaque tour** dans [pi](https://pi.dev), avec
-les métriques d'usage de la réponse de l'assistant :
+Shows a **notification after every turn** in [pi](https://pi.dev) with the usage
+metrics of the assistant's reply:
 
 ```
 > T1 · 0.186$ · OUT 7.79K · HIT 1.41M · MISS 79.60K
 ```
 
-| Segment | Signification |
-|---------|---------------|
-| `T1`    | Numéro du tour |
-| `0.186$`| Coût total du tour |
-| `OUT`   | Tokens générés (output) |
-| `HIT`   | Tokens lus depuis le cache (cache read) |
-| `MISS`  | Tokens d'entrée non cachés (input) |
+| Segment  | Meaning |
+|----------|---------|
+| `T1`     | Turn number |
+| `0.186$` | Total cost of the turn |
+| `OUT`    | Generated tokens (output) |
+| `HIT`    | Tokens read from cache (cache read) |
+| `MISS`   | Uncached input tokens (input) |
 
-Les couleurs suivent le thème actif (`accent` / `muted` / `dim`).
+Colors follow the active theme (`accent` / `muted` / `dim`).
 
 ## Installation
 
@@ -23,7 +23,7 @@ Les couleurs suivent le thème actif (`accent` / `muted` / `dim`).
 pi install npm:@nerisma/pi-turn-usage-notifications
 ```
 
-Ou via `settings.json` :
+Or via `settings.json`:
 
 ```json
 {
@@ -31,16 +31,26 @@ Ou via `settings.json` :
 }
 ```
 
-## Fonctionnement
+## How it works
 
-Branché sur l'événement `turn_end`, l'extension lit `event.message.usage` et
-émet une ligne via `ctx.ui.notify(...)`. Les segments vides (coût nul, pas de
-cache…) sont omis automatiquement.
+The extension subscribes to the `turn_end` event. When a turn ends it reads the
+usage off the assistant message (`event.message.usage`), which carries the cost
+breakdown (`cost.total`) and the token counts (`output`, `cacheRead`, `input`).
 
-## Compatibilité
+`usage` is not declared on the message union type in pi's published types, so it
+is read through a narrow local cast; the field is present on the assistant
+message at runtime.
+
+Each metric becomes a segment, formatted with `formatTokens` (e.g. `7.79K`,
+`1.41M`) and colored with the theme's ANSI codes. Empty segments are dropped: a
+zero cost, or a turn with no cache activity, simply does not appear. The segments
+are joined with a dim `·` separator and emitted as a single line through
+`ctx.ui.notify(line, "info")`.
+
+## Compatibility
 
 - pi `>= 0.78`
 
-## Licence
+## License
 
 MIT © Nerisma
