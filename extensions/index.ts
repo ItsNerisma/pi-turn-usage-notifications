@@ -31,6 +31,8 @@ interface UsageInfo {
 
 export default function (pi: ExtensionAPI) {
   pi.on("turn_end", async (event, ctx) => {
+    if (ctx.mode !== "tui") return;
+
     // Read the usage from the assistant message.
     // `usage` is not declared on the message union type in pi's published
     // types, but it is present at runtime on the assistant message.

@@ -15,7 +15,7 @@ metrics of the assistant's reply:
 | `HIT`    | Tokens read from cache (cache read) |
 | `MISS`   | Uncached input tokens (input) |
 
-Colors follow the active theme (`accent` / `muted` / `dim`).
+Colors follow the active theme (`accent` / `muted` / `dim`). Notifications are shown only in Pi's TUI, not in JSON or RPC modes.
 
 ![pi-turn-usage-notifications preview](./preview.png)
 
