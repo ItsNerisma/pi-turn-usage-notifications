@@ -66,4 +66,4 @@ are joined with a dim `·` separator and emitted as a single line through
 
 ## License
 
-MIT © Nerisma
+MIT © Project Contributors
